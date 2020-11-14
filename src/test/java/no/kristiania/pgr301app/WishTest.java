@@ -29,6 +29,6 @@ public class WishTest {
 
     @Test
     void returnsCorrectData() {
-        get("/wishes").then().assertThat().statusCode(200).body("title", equalTo("First"));
+        get("/wishes").then().assertThat().statusCode(200).body("title", equalTo("Second"));
     }
 }
