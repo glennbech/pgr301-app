@@ -1,5 +1,8 @@
 services:
 - docker
+branches:
+  only:
+    - master
 env:
   global:
   - GCP_PROJECT_ID=pgr301-exam-295320
