@@ -10,6 +10,6 @@ public class WishController {
 
     @GetMapping("/wishes")
     public Wish wishes() {
-        return new Wish("First", "wish.com");
+        return new Wish("Second", "wish.com");
     }
 }
