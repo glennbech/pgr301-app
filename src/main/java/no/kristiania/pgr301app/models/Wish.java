@@ -1,19 +1,48 @@
 package no.kristiania.pgr301app.models;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "wishes")
 public class Wish {
-    private final String title;
-    private final String url;
+    private long id;
+    private String title;
+    private String url;
+
+    public Wish() {
+
+    }
 
     public Wish(String title, String url) {
         this.title = title;
         this.url = url;
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    @Column
     public String getTitle() {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    @Column
     public String getUrl() {
         return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }
