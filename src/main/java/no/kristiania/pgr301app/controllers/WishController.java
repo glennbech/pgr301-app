@@ -7,6 +7,7 @@ import no.kristiania.pgr301app.repository.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponents;
@@ -20,7 +21,6 @@ import java.util.logging.Logger;
 public class WishController {
     private static final Logger LOG = Logger.getLogger(WishController.class.getName());
 
-
     private MeterRegistry meterRegistry;
 
     @Autowired
@@ -33,10 +33,10 @@ public class WishController {
 
 
 
-
     @GetMapping
     public List<Wish> getWishes() {
         LOG.info("Getting wishes.");
+        LOG.info(SecurityContextHolder.getContext().getAuthentication().getName());
         return wishRepository.findAll();
     }
 
@@ -52,6 +52,8 @@ public class WishController {
 
     @PostMapping
     public ResponseEntity<Wish> createWish(@RequestBody Wish wish, UriComponentsBuilder b) {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        wish.setUserId(auth.getName());
         Wish newWish =  wishRepository.save(wish);
         UriComponents uriComponents =
                 b.path("/wishes/{id}").buildAndExpand(newWish.getId());

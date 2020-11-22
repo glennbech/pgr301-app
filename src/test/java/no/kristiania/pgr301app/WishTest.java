@@ -2,6 +2,8 @@ package no.kristiania.pgr301app;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
 import no.kristiania.pgr301app.models.Wish;
 import no.kristiania.pgr301app.repository.WishRepository;
 import org.json.JSONException;
@@ -17,6 +19,7 @@ import io.restassured.RestAssured.*;
 import io.restassured.matcher.RestAssuredMatchers.*;
 import org.hamcrest.Matchers.*;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.test.context.ActiveProfiles;
 
 import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.post;
@@ -25,6 +28,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.CoreMatchers.hasItems;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class WishTest {
 

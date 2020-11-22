@@ -7,7 +7,9 @@ import javax.persistence.*;
 public class Wish {
     private long id;
     private String title;
+    private String description;
     private String url;
+    private String userId;
 
     public Wish() {
 
@@ -42,7 +44,25 @@ public class Wish {
         return url;
     }
 
+
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    @Column
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Column
+    public String getUserId() {
+        return userId;
+    }
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }
