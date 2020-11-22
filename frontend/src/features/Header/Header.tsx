@@ -5,7 +5,7 @@ function Header() {
 	const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
 	return (
 		<div className="header">
-			<div>santa post</div>
+			<div>santa-post</div>
 			<div>
 				{isAuthenticated ? (
 					<div>

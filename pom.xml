@@ -153,8 +153,8 @@
 						<phase>generate-resources</phase>
 						<configuration>
 							<target>
-								<copy todir="${project.build.directory}/classes/public">
-									<fileset dir="${project.basedir}/frontend/build"/>
+								<copy todir="./target/classes/public">
+									<fileset dir="./frontend/build"/>
 								</copy>
 							</target>
 						</configuration>
