@@ -1,7 +1,5 @@
 package no.kristiania.pgr301app.controllers;
-import io.micrometer.core.instrument.Counter;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Metrics;
+import io.micrometer.core.instrument.*;
 import no.kristiania.pgr301app.models.Wish;
 import no.kristiania.pgr301app.repository.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +35,11 @@ public class WishController {
 
     @GetMapping
     public List<Wish> getWishes() {
-        LOG.info("Getting wishes.");
-        LOG.info(SecurityContextHolder.getContext().getAuthentication().getName());
-        return wishRepository.findAll();
+        var user = SecurityContextHolder.getContext().getAuthentication().getName();
+        LOG.info(user + " getting wishes.");
+        List<Wish> wishes = wishRepository.findByGiftedFalse();
+        meterRegistry.gauge("ungifted-wishes", wishes.size());
+        return wishes;
     }
 
     @GetMapping("/{id}")
@@ -52,12 +52,27 @@ public class WishController {
         return ResponseEntity.ok().body(wish);
     }
 
+    @PutMapping("/{id}/gift")
+    public ResponseEntity givePresent(@PathVariable(value = "id") Long wishId) {
+
+        Wish wish = wishRepository
+                .findById(wishId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Wish not found"));
+
+        wish.setGifted(true);
+        wishRepository.save(wish);
+        var user = SecurityContextHolder.getContext().getAuthentication().getName();
+        LOG.info("Wish #" + wish.getId() + " gifted to user " + wish.getUserId() + " by " + user);
+
+        return ResponseEntity.ok("ok");
+    }
+
     @PostMapping
     public ResponseEntity<Wish> createWish(@RequestBody Wish wish, UriComponentsBuilder b) {
-
+        meterRegistry.summary("wish-cost").record(wish.getPrice());
         var auth = SecurityContextHolder.getContext().getAuthentication();
         wish.setUserId(auth.getName());
-        Wish newWish = meterRegistry.timer("save-wish-job").record(new Supplier<Wish>() {
+        Wish newWish = meterRegistry.timer("wish-save-job").record(new Supplier<Wish>() {
             @Override
             public Wish get() {
                 try {
@@ -72,7 +87,7 @@ public class WishController {
         UriComponents uriComponents =
                 b.path("/wishes/{id}").buildAndExpand(newWish.getId());
         LOG.info("Creating new wish with title" + newWish.getTitle());
-        meterRegistry.counter("wishcount", "wish", wish.getTitle()).increment();
+        meterRegistry.counter("wishes-created").increment();
         return ResponseEntity.created(uriComponents.toUri()).build();
     }
 }

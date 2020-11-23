@@ -10,6 +10,8 @@ public class Wish {
     private String description;
     private String url;
     private String userId;
+    private int price;
+    private boolean gifted;
 
     public Wish() {
 
@@ -64,5 +66,23 @@ public class Wish {
     }
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    @Column
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    @Column
+    public boolean isGifted() {
+        return gifted;
+    }
+
+    public void setGifted(boolean gifted) {
+        this.gifted = gifted;
     }
 }
