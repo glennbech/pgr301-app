@@ -22,8 +22,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/h2-console/**").permitAll()
                 .and().cors()
                 .and().oauth2ResourceServer().jwt();
-        http.csrf().disable();
-        http.headers().frameOptions().disable();
     }
 
 
