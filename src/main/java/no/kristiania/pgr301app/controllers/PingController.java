@@ -14,7 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class PingController {
 
     @GetMapping
-    public ResponseEntity getWish(@PathVariable(value = "id") Long wishId) {
+    public ResponseEntity ping() {
 
         return ResponseEntity.ok().body("pong");
     }
