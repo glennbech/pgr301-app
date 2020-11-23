@@ -14,6 +14,8 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 @RestController
@@ -52,9 +54,21 @@ public class WishController {
 
     @PostMapping
     public ResponseEntity<Wish> createWish(@RequestBody Wish wish, UriComponentsBuilder b) {
+
         var auth = SecurityContextHolder.getContext().getAuthentication();
         wish.setUserId(auth.getName());
-        Wish newWish =  wishRepository.save(wish);
+        Wish newWish = meterRegistry.timer("save-wish-job").record(new Supplier<Wish>() {
+            @Override
+            public Wish get() {
+                try {
+                    //Simulate time for metrics
+                    Thread.sleep(ThreadLocalRandom.current().nextLong(1, 1000));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return wishRepository.save(wish);
+            }
+        });
         UriComponents uriComponents =
                 b.path("/wishes/{id}").buildAndExpand(newWish.getId());
         LOG.info("Creating new wish with title" + newWish.getTitle());

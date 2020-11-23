@@ -2,7 +2,6 @@ FROM adoptopenjdk/maven-openjdk11:latest as builder
 WORKDIR /app
 COPY pom.xml .
 COPY src ./src
-COPY frontend ./frontend
 RUN mvn package
 
 FROM adoptopenjdk/openjdk11
