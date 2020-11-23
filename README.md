@@ -6,7 +6,8 @@ Del av eksamen i PGR301 - DevOps i skyen og demonstrere bruk av Terraform, Docke
 
 1. Opprett en service account for container registry og gi den rollen: "Google storage admin"
 2. Last ned nøkkel for service brukeren på json format og legg den i root mappen til prosjektet med navnet "gkey.json". Krypter filen med `travis encrypt-file --pro gkey.json --add`
-3. Forventer følgende miljøvariabler for lokal kjøring (disse blir satt av infrastrukturprosjektet ved kjøring på cloud platform):
+3. Oppdater GCP_PROJECT_ID og IMAGE i travis.yml
+4. Forventer følgende miljøvariabler for lokal kjøring (disse blir satt av infrastrukturprosjektet ved kjøring på cloud platform):
     - LOGZ_TOKEN (logz-io token)
     - DB_USERNAME (brukernavn for h2 db)
     - DB_PASSWORD (passord for h2 db)
