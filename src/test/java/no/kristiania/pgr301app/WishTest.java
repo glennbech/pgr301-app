@@ -21,8 +21,7 @@ import org.hamcrest.Matchers.*;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 
-import static io.restassured.RestAssured.get;
-import static io.restassured.RestAssured.post;
+import static io.restassured.RestAssured.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.CoreMatchers.hasItems;
@@ -90,6 +89,31 @@ public class WishTest {
         req.baseUri(location);
         req.get().then().assertThat().statusCode(200);
 
+    }
+
+    @Test
+    void giftTest() {
+        get("/wishes").then().assertThat().statusCode(200).body("size()", is(0));
+
+        RequestSpecification request = RestAssured.given();
+        JSONObject reqParams = new JSONObject();
+        reqParams.put("title", "Whatever");
+        reqParams.put("url", "Whatever");
+
+        request.body(reqParams.toJSONString());
+        request.header("Content-Type", "application/json");
+        var response = request.post("/wishes");
+
+        get("/wishes").then().assertThat().statusCode(200).body("size()", is(1));
+
+        var location = response.header("Location");
+
+
+        var req = RestAssured.given();
+        req.baseUri(location);
+        req.put("/gift").then().assertThat().statusCode(200);
+
+        get("/wishes").then().assertThat().statusCode(200).body("size()", is(0));
 
     }
 
